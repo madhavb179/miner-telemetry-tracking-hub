@@ -20,12 +20,12 @@ let minerTelemetry = {
 const mqttClient = mqtt.connect("mqtt://10.36.253.233:1883");
 
 mqttClient.on("connect", () => {
-    console.log("✅ Node.js Server successfully connected to Mosquitto Broker!");
+    console.log("Node.js Server successfully connected to Mosquitto Broker!");
     
     // Subscribe to your specific chest sensor channel topic
     mqttClient.subscribe("mine/miner01/body/chest", (err) => {
         if (!err) {
-            console.log("📡 Subscribed to topic: mine/miner01/body/chest");
+            console.log("Subscribed to topic: mine/miner01/body/chest");
         }
     });
 });
@@ -38,9 +38,9 @@ mqttClient.on("message", (topic, message) => {
         // Save the raw incoming sensor data object straight to memory
         minerTelemetry.chest = payload;
 
-        console.log(`📥 Incoming Data:`, payload);
+        console.log(`Incoming Data:`, payload);
     } catch (error) {
-        console.log("❌ Received telemetry, but it wasn't a valid JSON string.");
+        console.log("Received telemetry, but it wasn't a valid JSON string.");
     }
 });
 
@@ -50,5 +50,5 @@ app.get("/api/sensor-data", (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Backend tracking server running at http://localhost:${PORT}`);
+    console.log(`Backend tracking server running at http://localhost:${PORT}`);
 });
