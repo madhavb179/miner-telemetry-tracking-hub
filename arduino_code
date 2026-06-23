@@ -1,0 +1,93 @@
+#include <WiFi.h>
+#include <PubSubClient.h>
+#include <Wire.h>
+#include <MPU6050_light.h>
+#include <math.h>
+
+const char* ssid = "moto g45 5G_7751";
+const char* password = "hotspots";
+
+// MQTT broker IP (your Mosquitto PC)
+const char* mqtt_server = "10.36.253.88";
+const int mqtt_port = 1883;
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+MPU6050 mpu(Wire);
+
+unsigned long timer = 0;
+
+void setupWiFi() {
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting WiFi");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\nWiFi connected");
+  Serial.println(WiFi.localIP());
+}
+
+void reconnectMQTT() {
+  while (!client.connected()) {
+    Serial.print("Connecting MQTT...");
+
+    if (client.connect("ESP32_MPU6050")) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed rc=");
+      Serial.println(client.state());
+      delay(2000);
+    }
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  Wire.begin(21, 22);
+
+  setupWiFi();
+  client.setServer(mqtt_server, mqtt_port);
+
+  byte status = mpu.begin();
+  Serial.print("MPU6050 status: ");
+  Serial.println(status);
+
+  Serial.println("Calibrating...");
+  delay(1000);
+  mpu.calcOffsets(true, true);
+  Serial.println("Done!");
+}
+
+void loop() {
+
+  if (!client.connected()) {
+    reconnectMQTT();
+  }
+
+  client.loop();
+
+  mpu.update();
+
+  if (millis() - timer > 200) {
+
+    float pitch = mpu.getAngleX();
+    float roll  = mpu.getAngleY();
+    float yaw   = 0; // MPU6050 has NO magnetometer → yaw drifts
+
+    String payload = "{";
+    payload += "\"pitch\":" + String(pitch, 2) + ",";
+    payload += "\"roll\":" + String(roll, 2) + ",";
+    payload += "\"yaw\":" + String(yaw, 2);
+    payload += "}";
+
+    client.publish("mine/miner01/body/chest", payload.c_str());
+
+    Serial.println(payload);
+
+    timer = millis();
+  }
+}
