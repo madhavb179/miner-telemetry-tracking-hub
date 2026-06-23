@@ -46,3 +46,12 @@ Open your Command Prompt or PowerShell terminal **as an Administrator** and exec
 ```cmd
 cd "C:\Program Files\Mosquitto"
 .\mosquitto.exe -c .\mosquitto.conf -v
+
+### 2. Start the Backend API Server
+Navigate to your backend server project directory, install the required dependencies, and launch the Node process:
+```bash
+ #Install node modules (express, mqtt, cors)
+npm install
+
+# Start the tracker server
+node server.js
