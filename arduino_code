@@ -4,11 +4,11 @@
 #include <MPU6050_light.h>
 #include <math.h>
 
-const char* ssid = "moto g45 5G_7751";
-const char* password = "hotspots";
+const char* ssid = "SSID WIFI NAME";
+const char* password = "PASSWORD
 
 // MQTT broker IP (your Mosquitto PC)
-const char* mqtt_server = "10.36.253.88";
+const char* mqtt_server = "IP ADDRESS";
 const int mqtt_port = 1883;
 
 WiFiClient espClient;
