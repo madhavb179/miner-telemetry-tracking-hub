@@ -17,7 +17,7 @@ let minerTelemetry = {
 };
 
 // Connect to the local Mosquitto broker running on your computer
-const mqttClient = mqtt.connect("mqtt://10.36.253.233:1883");
+const mqttClient = mqtt.connect("mqtt://127.0.0.1:1883");
 
 mqttClient.on("connect", () => {
     console.log("Node.js Server successfully connected to Mosquitto Broker!");
