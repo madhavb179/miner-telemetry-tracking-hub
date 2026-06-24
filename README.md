@@ -55,3 +55,6 @@ npm install
 
 # Start the tracker server
 node server.js
+
+# start the website
+npm run dev
