@@ -1,3 +1,7 @@
+//import esp32
+//import PubSubClient
+//import MPU6050_light
+
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <Wire.h>
